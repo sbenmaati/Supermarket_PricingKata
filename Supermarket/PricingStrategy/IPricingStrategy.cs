@@ -8,9 +8,9 @@ namespace Supermarket.PricingStrategy
 {
     public interface IPricingStrategy
     {
-        string Code { get; }
+       
 
        
-        decimal GetPrice(Order order);
+        decimal GetPrice(OrderItem order);
     }
 }

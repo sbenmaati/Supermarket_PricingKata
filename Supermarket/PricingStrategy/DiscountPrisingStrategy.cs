@@ -7,12 +7,21 @@ namespace Supermarket.PricingStrategy
 {
     public class DiscountPrisingStrategy : IPricingStrategy
     {
-        public string Code { get => "DiscountPricingStrategy"; }
-
-        public decimal GetPrice(Order order)
+        private int package { get; set; }
+        private int offeredQuantity { get; set; }
+        public DiscountPrisingStrategy(int package ,int offeredQuantity)
         {
-            return order.GetProduct().GetUnitairyPrice() * (order.GetQuantity() - order.GetQuantity() * order.GetOfferedQuantity() / order.GetPackage());
+            this.package = package;
+            this.offeredQuantity = offeredQuantity;
+        }
+        public decimal GetPrice(OrderItem order)
+        {
+            return order.GetProduct().GetUnitairyPrice() * (order.GetQuantity() - order.GetQuantity() * offeredQuantity / package);
             
         }
+       
+       
+       
+      
     }
 }

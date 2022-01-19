@@ -6,7 +6,7 @@ using Supermarket.PricingStrategy;
 using Supermarket.Models;
 using NSubstitute;
 using Xunit;
-using Supermarket.Services;
+
 
 namespace SupermarketTest
 {
@@ -16,12 +16,12 @@ namespace SupermarketTest
         
         private IPricingStrategy _pricingStrategy;
 
-        private IPricingServices _pricingServices;
+        
 
         public OrderTest()
         {
             _pricingStrategy = Substitute.For<IPricingStrategy>();
-            _pricingServices = Substitute.For<IPricingServices>();
+           
 
 
 
@@ -35,10 +35,10 @@ namespace SupermarketTest
             //Arrange
 
             var defautPricingStrategy = new DefaultPricingStrategy();
-            var product = new Product(1, "Coke", 15, defautPricingStrategy);
+            var product = new Product(1, "Coke", 15);
 
-            var order = new Order(product);
-            order.SetQuantity(3);
+            var orderItem = new OrderItem(product, defautPricingStrategy);
+            orderItem.SetQuantity(3);
 
 
             //Act
@@ -48,7 +48,7 @@ namespace SupermarketTest
 
 
             //Assert
-            Assert.Equal(expectedTotalPrice, order.GetOrderPrice());
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
 
 
@@ -57,13 +57,12 @@ namespace SupermarketTest
         {
             //Arrange
 
-            var discountPricingStrategy = new DiscountPrisingStrategy();
-            var product = new Product(1, "Coke", 15, discountPricingStrategy);
+            var discountPricingStrategy = new DiscountPrisingStrategy(3,1);
+            var product = new Product(1, "Coke", 15);
 
-            var order = new Order(product) ;
-            order.SetQuantity(3);
-            order.SetOfferedQuantity(1);
-            order.SetPackage(3);
+            var orderItem = new OrderItem(product, discountPricingStrategy) ;
+            orderItem.SetQuantity(3);
+            
             //Act
 
 
@@ -71,7 +70,7 @@ namespace SupermarketTest
 
 
             //Assert
-            Assert.Equal(expectedTotalPrice, order.GetOrderPrice());
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
 
 
@@ -81,10 +80,10 @@ namespace SupermarketTest
             //Arrange
 
             var weightPricingStrategy = new WeightPricingStrategy();
-            var product = new Product(1, "Apple", 5, weightPricingStrategy);
+            var product = new Product(1, "Apple", 5);
 
-            var order = new Order(product) ;
-            order.SetWeight(3);
+            var orderItem = new OrderItem(product, weightPricingStrategy) ;
+            orderItem.SetWeight(3);
 
             //Act
 
@@ -93,7 +92,7 @@ namespace SupermarketTest
 
 
             //Assert
-            Assert.Equal(expectedTotalPrice, order.GetOrderPrice());
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
 
 
@@ -102,27 +101,27 @@ namespace SupermarketTest
         public void OrderList_with_MultiplePricingStrategy()
         {
             //Arrange
-            var pricingService = new PricingServices();
-            var orderList = new List<Order>();
-            var weightPricingStrategy = new WeightPricingStrategy();
-            var product = new Product(1, "Apple", 5, weightPricingStrategy);
-            var order = new Order(product);
-             order.SetWeight(3);
-            orderList.Add(order);
-            var discountPricingStrategy = new DiscountPrisingStrategy();
-            var product_2 = new Product(1, "Coke", 15, discountPricingStrategy);
             
-            var order_2 = new Order(product_2) ;
-            order_2.SetQuantity(3);
-            order_2.SetOfferedQuantity(1);
-            order_2.SetPackage(3);
-            orderList.Add(order_2);
-            var defautPricingStrategy = new DefaultPricingStrategy();
-            var product_3 = new Product(1, "Coke", 15, defautPricingStrategy);
+            var order = new Order();
+            var weightPricingStrategy = new WeightPricingStrategy();
+            var product = new Product(1, "Apple", 5);
 
-            var order_3 = new Order(product_3);
-            order_3.SetQuantity(3); ;
-            orderList.Add(order_3);
+            var orderItem = new OrderItem(product, weightPricingStrategy);
+            orderItem.SetWeight(3);
+            order.OrderItems.Add(orderItem);
+            var discountPricingStrategy = new DiscountPrisingStrategy(3,1);
+            var product_2 = new Product(1, "Coke", 15);
+            
+            var orderItem_2 = new OrderItem(product_2, discountPricingStrategy) ;
+            orderItem_2.SetQuantity(3);
+           
+            order.OrderItems.Add(orderItem_2);
+            var defautPricingStrategy = new DefaultPricingStrategy();
+            var product_3 = new Product(1, "Coke", 15);
+
+            var orderItem_3 = new OrderItem(product_3, defautPricingStrategy);
+            orderItem_3.SetQuantity(3); ;
+            order.OrderItems.Add(orderItem_3);
             //Act
 
 
@@ -130,7 +129,7 @@ namespace SupermarketTest
 
 
             //Assert
-            Assert.Equal(expectedTotalPrice, pricingService.GetTotalPrice(orderList));
+            Assert.Equal(expectedTotalPrice, order.GetTotalPrice());
         }
 
 

@@ -8,9 +8,9 @@ namespace Supermarket.PricingStrategy
 {
     public class DefaultPricingStrategy : IPricingStrategy
     {
-        public string Code { get => "DefaultPricingStrategy"; }
+       
 
-        public decimal GetPrice(Order order)
+        public decimal GetPrice(OrderItem order)
         {
             return order.GetProduct().GetUnitairyPrice() * order.GetQuantity();    
         }

@@ -8,9 +8,9 @@ namespace Supermarket.PricingStrategy
 {
     public class WeightPricingStrategy : IPricingStrategy
     {
-        public string Code { get => "WeightPricingStrategy"; }
+        
 
-        public decimal GetPrice(Order order)
+        public decimal GetPrice(OrderItem order)
         {
             return order.GetProduct().GetUnitairyPrice() * order.GetWeight();
         }
