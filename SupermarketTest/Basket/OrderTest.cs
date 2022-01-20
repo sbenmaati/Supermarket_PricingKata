@@ -51,6 +51,27 @@ namespace SupermarketTest
             Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
 
+        [Fact]
+        public void Order_2_with_defaultPricingStrategy()
+        {
+            //Arrange
+
+            var defautPricingStrategy = new DefaultPricingStrategy();
+            var product = new Product(1, "A", 10);
+
+            var orderItem = new OrderItem(product, defautPricingStrategy);
+            orderItem.SetQuantity(10);
+
+
+            //Act
+
+
+            decimal? expectedTotalPrice = 100;
+
+
+            //Assert
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
+        }
 
         [Fact]
         public void Order_with_DiscountPricingStrategy()
@@ -72,6 +93,29 @@ namespace SupermarketTest
             //Assert
             Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
+        [Fact]
+        public void Order_2_with_DiscountPricingStrategy()
+        {
+            //Arrange
+
+            var discountPricingStrategy = new DiscountPrisingStrategy(5, 2);
+            var product = new Product(1, "B", 15);
+
+            var orderItem = new OrderItem(product, discountPricingStrategy);
+            orderItem.SetQuantity(5);
+
+            //Act
+
+
+            decimal? expectedTotalPrice = 45;
+
+
+            //Assert
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
+        }
+
+
+
 
 
         [Fact]
@@ -95,6 +139,26 @@ namespace SupermarketTest
             Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
         }
 
+        [Fact]
+        public void Order_2_with_WeightPricingStrategy()
+        {
+            //Arrange
+
+            var weightPricingStrategy = new WeightPricingStrategy();
+            var product = new Product(1, "Apple", 5.5m);
+
+            var orderItem = new OrderItem(product, weightPricingStrategy);
+            orderItem.SetWeight(5);
+
+            //Act
+
+
+            decimal? expectedTotalPrice = 27.5m;
+
+
+            //Assert
+            Assert.Equal(expectedTotalPrice, orderItem.GetOrderPrice());
+        }
 
 
         [Fact]
@@ -111,7 +175,7 @@ namespace SupermarketTest
             order.OrderItems.Add(orderItem);
             var discountPricingStrategy = new DiscountPrisingStrategy(3,1);
             var product_2 = new Product(1, "Coke", 15);
-            
+        
             var orderItem_2 = new OrderItem(product_2, discountPricingStrategy) ;
             orderItem_2.SetQuantity(3);
            
@@ -122,10 +186,16 @@ namespace SupermarketTest
             var orderItem_3 = new OrderItem(product_3, defautPricingStrategy);
             orderItem_3.SetQuantity(3); ;
             order.OrderItems.Add(orderItem_3);
+            
+            var product_4 = new Product(1, "C", 2);
+
+            var orderItem_4 = new OrderItem(product_4, defautPricingStrategy);
+            orderItem_4.SetQuantity(5); ;
+            order.OrderItems.Add(orderItem_4);
             //Act
 
 
-            decimal? expectedTotalPrice = 90;
+            decimal? expectedTotalPrice = 100;
 
 
             //Assert
